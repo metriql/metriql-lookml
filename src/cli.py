@@ -1,3 +1,4 @@
+import argparse
 import json
 import lkml
 import pathlib
@@ -42,22 +43,30 @@ def generate_lookml_views(models: List[models.MetriqlModel]):
     )
 
 
-def generate_lookml_models(models: List[models.MetriqlModel]):
+def generate_lookml_models(models: List[models.MetriqlModel], project_name: str):
 
-    lookml_models = [
-        generator.lookml_model_from_metriql_model(model, "Project Name")
-        for model in typed_metriql_models
-    ]
+    lookml_models_file = generator.lookml_model_from_metriql_models(
+        models, project_name
+    )
 
-    for model in lookml_models:
-        with open(os.path.join(LOOKML_OUTPUT_DIR, model.filename), "w") as f:
-            f.write(model.contents)
-    logging.info(f"Generated {len(lookml_models)} lookml models in {LOOKML_OUTPUT_DIR}")
+    with open(os.path.join(LOOKML_OUTPUT_DIR, lookml_models_file.filename), "w") as f:
+        f.write(lookml_models_file.contents)
+
+    logging.info(
+        f"Generated {lookml_models_file.filename} lookml models in {LOOKML_OUTPUT_DIR}"
+    )
 
 
 if __name__ == "__main__":
 
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument(
+        "--project_name", help="Model name", type=str, default="explorer"
+    )
+
+    args = argparser.parse_args()
+
     typed_metriql_models = load_metriql_models()
     generate_lookml_views(typed_metriql_models)
-    generate_lookml_models(typed_metriql_models)
+    generate_lookml_models(typed_metriql_models, args.project_name)
     logging.info("Success")

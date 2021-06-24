@@ -1,4 +1,5 @@
 import lkml
+from typing import List
 from models import MetriqlModel, LookViewFile, LookModelFile, Measure
 
 
@@ -15,14 +16,23 @@ def lookml_view_from_metriql_model(model: MetriqlModel):
     return LookViewFile(filename=filename, contents=contents)
 
 
-def lookml_model_from_metriql_model(model: MetriqlModel, dbt_project_name: str):
+def lookml_model_from_metriql_models(models: List[MetriqlModel], project_name: str):
+
+    explore = []
+    for model in models:
+        explore_model_data = {"name": model.name}
+        if model.description:
+            explore_model_data["description"] = model.description
+        explore.append(explore_model_data)
+
     lookml = {
-        "connection": dbt_project_name,
+        "connection": project_name,
         "include": "/views/*",
-        "explore": {"name": model.name, "description": model.description},
+        "explore": explore,
     }
+
     contents = lkml.dump(lookml)
-    filename = f"{model.name}.model"
+    filename = f"{project_name}.model"
     return LookModelFile(filename=filename, contents=contents)
 
 
