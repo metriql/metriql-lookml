@@ -2,6 +2,18 @@ import lkml
 from typing import List
 from models import MetriqlModel, LookViewFile, LookModelFile, Measure
 
+LOOKER_DTYPE_MAP = {
+        'integer':     'number',
+        'decimal':   'number',
+        'double':     'number',
+        'long':   'number',
+        'boolean':   'yesno',
+        'string':    'string',
+        'timestamp': 'date',
+        'time':  'date',
+        'date':      'date'
+    }
+
 def lookml_view_from_metriql_model(model: MetriqlModel, models: List[MetriqlModel]):
 
     lookml = {
@@ -62,7 +74,7 @@ def lookml_measure(measure: Measure, prefix: str):
         measure_sql = f"${{{measure.value.dimension}}}"
 
     if measure.type == "sql":
-        measure_type = column if column else measure.fieldType
+        measure_type = column if column else LOOKER_DTYPE_MAP[measure.fieldType]
         measure_sql = measure.value.sql
 
     measures = {
