@@ -2,19 +2,18 @@ import lkml
 from typing import List
 from models import MetriqlModel, LookViewFile, LookModelFile, Measure
 
+def lookml_view_from_metriql_model(model: MetriqlModel, models: List[MetriqlModel]):
 
-def lookml_view_from_metriql_model(model: MetriqlModel):
     lookml = {
         "view": {
             "name": model.name,
             "sql_table_name": f"{model.target.value.database}.{model.target.value.db_schema}.{model.target.value.table}",
-            "measures": lookml_measures_from_model(model),
+            "measures": lookml_measures_from_model(model, models),
         }
     }
     contents = lkml.dump(lookml)
     filename = f"{model.name}.view"
     return LookViewFile(filename=filename, contents=contents)
-
 
 def lookml_model_from_metriql_models(models: List[MetriqlModel], project_name: str):
 
@@ -35,23 +34,46 @@ def lookml_model_from_metriql_models(models: List[MetriqlModel], project_name: s
     filename = f"{project_name}.model"
     return LookModelFile(filename=filename, contents=contents)
 
+def lookml_measures_from_model(model: MetriqlModel, models: List[MetriqlModel]):
 
-def lookml_measures_from_model(model: MetriqlModel):
-    return [
-        lookml_measure(measure)
+    lookml_measures = []
+    for relation in model.relations:
+        relation_model = next(filter(lambda d: d.name == relation.modelName, models))
+
+        for measure in relation_model.measures:
+            lookml_measures.append(lookml_measure(measure, relation.name))
+
+    lookml_measures.extend([
+        lookml_measure(measure, None)
         for measure in model.measures
-        if measure.type == "column"
-    ]
+    ])
+    return lookml_measures
 
+def lookml_measure(measure: Measure, prefix: str):
+    name = ("{}.".format(prefix) if prefix else "") + measure.name
+    measure_type = measure.value.aggregation
 
-def lookml_measure(measure: Measure):
-    column = measure.value.column if measure.value.column else "*"
+    column = measure.value.column
+    measure_sql = ""
+    if column:
+        measure_sql = f"${{TABLE}}.{column}"
+
+    if measure.type == "dimension":
+        measure_sql = f"${{{measure.value.dimension}}}"
+
+    if measure.type == "sql":
+        measure_type = column if column else measure.fieldType
+        measure_sql = measure.value.sql
+
     measures = {
-        "name": measure.name,
-        "type": measure.value.aggregation,
-        "sql": f"${{TABLE}}.{column}",
-        "description": measure.description
-        or f"{measure.value.aggregation.capitalize()} of {column}",
+        "name": name,
+        "type": measure_type,
     }
+    if measure_sql:
+        measures["sql"] = measure_sql
+    if measure.description:
+        measures["description"] = measure.description
+    elif column:
+         measures["description"] = f"{measure_type} of {column}"
 
     return measures
