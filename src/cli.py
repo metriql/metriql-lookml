@@ -28,7 +28,9 @@ def load_metriql_models():
 
 
 def generate_lookml_views(models: List[models.MetriqlModel]):
-    lookml_views = [generator.lookml_view_from_metriql_model(model, models) for model in models]
+    lookml_views = [
+        generator.lookml_view_from_metriql_model(model, models) for model in models
+    ]
 
     pathlib.Path(os.path.join(LOOKML_OUTPUT_DIR, "views")).mkdir(
         parents=True, exist_ok=True
