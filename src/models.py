@@ -52,12 +52,8 @@ class DimensionValue(BaseModel):
     column: str
 
 
-class Datastudio(BaseModel):
-    semantic_type: str
-
-
 class ReportOption(BaseModel):
-    datastudio: Datastudio
+    looker: dict
 
 
 class Dimension(BaseModel):
@@ -92,7 +88,7 @@ class Measure(BaseModel):
     type: str
     value: MeasureValue
     filters: Any
-    reportOptions: Any
+    reportOptions: Optional[ReportOption]
     fieldType: str
     hidden: Any
     drills: Any
