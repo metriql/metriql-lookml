@@ -93,7 +93,7 @@ class Measure(BaseModel):
     type: str
     value: MeasureValue
     filters: Any
-    reportOptions: Any
+    reportOptions: Optional[ReportOption]
     fieldType: str
     hidden: Any
     drills: Any

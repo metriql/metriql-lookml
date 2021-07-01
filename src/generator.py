@@ -94,8 +94,8 @@ def lookml_measure(measure: Measure, prefix: str):
     if measure.label:
         measures["label"] = measure.label
 
-    if measure.reportOptions and "looker" in measure.reportOptions:
-        looker = measure.reportOptions.get("looker")
+    if measure.reportOptions and measure.reportOptions.looker:
+        looker = measure.reportOptions.looker
         for key in looker:
             measures[key] = str(looker[key])
 
