@@ -103,6 +103,11 @@
         "postOperations": null,
         "fieldType": "double",
         "reportOptions": {
+          "looker": {
+            "type": "duration",
+            "sql_end": "2",
+            "sql_start": "1"
+          },
           "datastudio": {
             "semantic_type": "country"
           }
@@ -223,7 +228,16 @@
           "column": null
         },
         "filters": null,
-        "reportOptions": null,
+        "reportOptions": {
+          "looker": {
+            "type": "duration",
+            "sql_end": 2,
+            "sql_start": 1
+          },
+          "datastudio": {
+            "semantic_type": "country"
+          }
+        },
         "fieldType": "double",
         "hidden": null,
         "drills": null

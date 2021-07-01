@@ -25,6 +25,7 @@ def lookml_view_from_metriql_model(model: MetriqlModel, models: List[MetriqlMode
             "measures": lookml_measures_from_model(model, models),
         }
     }
+
     contents = lkml.dump(lookml)
     filename = f"{model.name}.view"
     return LookViewFile(filename=filename, contents=contents)
@@ -85,9 +86,17 @@ def lookml_measure(measure: Measure, prefix: str):
         if measure_type in LOOKER_DTYPE_MAP
         else measure_type,
     }
+
     if measure_sql:
         measures["sql"] = measure_sql
     if measure.description:
         measures["description"] = measure.description
+    if measure.label:
+        measures["label"] = measure.label
+
+    if measure.reportOptions and "looker" in measure.reportOptions:
+        looker = measure.reportOptions.get("looker")
+        for key in looker:
+            measures[key] = str(looker[key])
 
     return measures
