@@ -57,7 +57,6 @@ class Datastudio(BaseModel):
 
 
 class ReportOption(BaseModel):
-    datastudio: Datastudio
     looker: dict
 
 
