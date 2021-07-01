@@ -52,10 +52,6 @@ class DimensionValue(BaseModel):
     column: str
 
 
-class Datastudio(BaseModel):
-    semantic_type: str
-
-
 class ReportOption(BaseModel):
     looker: dict
 
