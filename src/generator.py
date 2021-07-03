@@ -1,6 +1,6 @@
 import lkml
 from typing import List
-from models import MetriqlModel, LookViewFile, LookModelFile, Measure
+from models import MetriqlModel, LookViewFile, LookModelFile, Measure, Dimension
 
 LOOKER_DTYPE_MAP = {
     "integer": "number",
@@ -15,6 +15,8 @@ LOOKER_DTYPE_MAP = {
     "approximateUnique": "count_distinct",
 }
 
+looker_scalar_types = ["number", "yesno", "string"]
+
 
 def lookml_view_from_metriql_model(model: MetriqlModel, models: List[MetriqlModel]):
 
@@ -23,6 +25,7 @@ def lookml_view_from_metriql_model(model: MetriqlModel, models: List[MetriqlMode
             "name": model.name,
             "sql_table_name": f"{model.target.value.database}.{model.target.value.db_schema}.{model.target.value.table}",
             "measures": lookml_measures_from_model(model, models),
+            "dimensions": lookml_dimensions_from_model(model, models),
         }
     }
 
@@ -100,3 +103,85 @@ def lookml_measure(measure: Measure, prefix: str):
             measures[key] = str(looker[key])
 
     return measures
+
+
+def lookml_dimensions_from_model(model: MetriqlModel, models: List[MetriqlModel]):
+
+    lookml_dimensions = [
+        dimension_data
+        for dimension in model.dimensions
+        for dimension_data in lookml_dimension(dimension, None)
+    ]
+
+    for relation in model.relations:
+        relation_model = next(filter(lambda d: d.name == relation.modelName, models))
+
+        for dimension in relation_model.dimensions:
+            lookml_dimensions.extend(lookml_dimension(dimension, relation.name))
+
+    return list(filter(None, lookml_dimensions))
+
+
+def lookml_dimension(dimension: Dimension, prefix: str):
+    dimension_type = (
+        LOOKER_DTYPE_MAP[dimension.fieldType]
+        if dimension.fieldType in LOOKER_DTYPE_MAP
+        else dimension.fieldType
+    )
+
+    if not dimension_type in looker_scalar_types:
+        return lookml_dimension_group(dimension, prefix)
+
+    name = ("{}.".format(prefix) if prefix else "") + dimension.name
+
+    dimension_sql = ""
+    if dimension.type == "column":
+        column = dimension.value.column
+        dimension_sql = f"${{TABLE}}.{column}"
+
+    if dimension.type == "sql":
+        dimension_sql = dimension.value.sql
+
+    dimension_data = {
+        "name": name,
+        "type": LOOKER_DTYPE_MAP[dimension_type]
+        if dimension_type in LOOKER_DTYPE_MAP
+        else dimension_type,
+    }
+
+    if dimension_sql:
+        dimension_data["sql"] = dimension_sql
+    if dimension.description:
+        dimension_data["description"] = dimension.description
+    if dimension.label:
+        dimension_data["label"] = dimension.label
+
+    if dimension.reportOptions and dimension.reportOptions.looker:
+        looker = dimension.reportOptions.looker
+        for key in looker:
+            dimension_data[key] = str(looker[key])
+
+    return [dimension_data]
+
+
+def lookml_dimension_group(dimension: Dimension, prefix: str):
+    """dimension: created_at__day {
+      label: Day
+      sql: ${TABLE}.created_at::day ;;
+      group_label: "Created At"
+    }
+    """
+    timeframes = dimension.timeframes
+    if timeframes:
+        return [
+            {
+                "name": ("{}.".format(prefix) if prefix else "")
+                + f"{dimension.name}__{timeframe}",
+                "sql": f"${{TABLE}}.{dimension.value.column}::{timeframe}",
+                "label": timeframe,
+                "group_label": dimension.value.column,
+            }
+            for timeframe in timeframes
+        ]
+
+    return []

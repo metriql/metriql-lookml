@@ -49,7 +49,9 @@ class Relation(BaseModel):
 
 
 class DimensionValue(BaseModel):
-    column: str
+    column: Optional[str] = None
+    dimension: Optional[str] = None
+    sql: Optional[str] = None
 
 
 class ReportOption(BaseModel):
@@ -69,13 +71,14 @@ class Dimension(BaseModel):
     postOperations: Optional[List[str]]
     fieldType: str
     reportOptions: Optional[ReportOption]
+    timeframes: Optional[List[str]]
     hidden: Any
     drills: Any
 
 
 class MeasureValue(BaseModel):
     aggregation: Optional[str]
-    column: Optional[Optional[str]] = None
+    column: Optional[str] = None
     dimension: Optional[str] = None
     sql: Optional[str] = None
 
