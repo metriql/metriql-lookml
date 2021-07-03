@@ -329,7 +329,6 @@
         "primary": null,
         "pivot": null,
         "suggestions": null,
-        "timeframes": ["day", "week", "month"],
         "postOperations": [
           "day",
           "week",

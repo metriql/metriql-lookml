@@ -171,17 +171,17 @@ def lookml_dimension_group(dimension: Dimension, prefix: str):
       group_label: "Created At"
     }
     """
-    timeframes = dimension.timeframes
-    if timeframes:
+    postOperations = dimension.postOperations
+    if postOperations:
         return [
             {
                 "name": ("{}.".format(prefix) if prefix else "")
-                + f"{dimension.name}__{timeframe}",
-                "sql": f"${{TABLE}}.{dimension.value.column}::{timeframe}",
-                "label": timeframe,
+                + f"{dimension.name}__{postOperation}",
+                "sql": f"${{TABLE}}.{dimension.value.column}::{postOperation}",
+                "label": postOperation,
                 "group_label": dimension.value.column,
             }
-            for timeframe in timeframes
+            for postOperation in postOperations
         ]
 
     return []
