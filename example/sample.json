@@ -1,352 +1,5 @@
 [
   {
-    "name": "source_snowflake_tpch_sample_tpch_orders",
-    "hidden": false,
-    "target": {
-      "type": "table",
-      "value": {
-        "database": "SNOWFLAKE_SAMPLE_DATA",
-        "schema": "TPCH_SF1",
-        "table": "ORDERS"
-      }
-    },
-    "label": "Orders",
-    "description": "",
-    "category": null,
-    "mappings": {
-      "userId": "o_custkey",
-      "eventTimestamp": "o_orderdate"
-    },
-    "relations": [
-      {
-        "name": "source_snowflake_tpch_sample_tpch_customer",
-        "label": "customer",
-        "description": null,
-        "relationType": "oneToOne",
-        "joinType": "leftJoin",
-        "modelName": "source_snowflake_tpch_sample_tpch_customer",
-        "type": "column",
-        "value": {
-          "sourceColumn": "O_CUSTKEY",
-          "targetColumn": "c_custkey"
-        },
-        "hidden": null
-      }
-    ],
-    "dimensions": [
-      {
-        "name": "o_orderkey",
-        "type": "column",
-        "value": {
-          "column": "O_ORDERKEY"
-        },
-        "description": "",
-        "label": null,
-        "category": null,
-        "primary": null,
-        "pivot": null,
-        "suggestions": null,
-        "postOperations": null,
-        "fieldType": "double",
-        "reportOptions": null,
-        "hidden": null,
-        "drills": null
-      },
-      {
-        "name": "o_custkey",
-        "type": "column",
-        "value": {
-          "column": "O_CUSTKEY"
-        },
-        "description": "",
-        "label": null,
-        "category": null,
-        "primary": null,
-        "pivot": null,
-        "suggestions": null,
-        "postOperations": null,
-        "fieldType": "double",
-        "reportOptions": null,
-        "hidden": null,
-        "drills": null
-      },
-      {
-        "name": "o_orderstatus",
-        "type": "column",
-        "value": {
-          "column": "O_ORDERSTATUS"
-        },
-        "description": "",
-        "label": null,
-        "category": null,
-        "primary": null,
-        "pivot": null,
-        "suggestions": null,
-        "postOperations": null,
-        "fieldType": "string",
-        "reportOptions": null,
-        "hidden": null,
-        "drills": null
-      },
-      {
-        "name": "o_totalprice",
-        "type": "column",
-        "value": {
-          "column": "O_TOTALPRICE"
-        },
-        "description": "",
-        "label": null,
-        "category": null,
-        "primary": null,
-        "pivot": null,
-        "suggestions": null,
-        "postOperations": null,
-        "fieldType": "double",
-        "reportOptions": {
-          "looker": {
-            "type": "duration",
-            "sql_end": "2",
-            "sql_start": "1"
-          },
-          "datastudio": {
-            "semantic_type": "country"
-          }
-        },
-        "hidden": null,
-        "drills": null
-      },
-      {
-        "name": "o_orderdate",
-        "type": "column",
-        "value": {
-          "column": "O_ORDERDATE"
-        },
-        "description": "",
-        "label": null,
-        "category": null,
-        "primary": null,
-        "pivot": null,
-        "suggestions": null,
-        "postOperations": [
-          "day",
-          "week",
-          "month",
-          "year",
-          "dayOfMonth",
-          "weekOfYear",
-          "monthOfYear",
-          "quarterOfYear",
-          "dayOfWeek"
-        ],
-        "fieldType": "date",
-        "reportOptions": null,
-        "hidden": null,
-        "drills": null
-      },
-      {
-        "name": "o_orderpriority",
-        "type": "column",
-        "value": {
-          "column": "O_ORDERPRIORITY"
-        },
-        "description": "",
-        "label": null,
-        "category": null,
-        "primary": null,
-        "pivot": null,
-        "suggestions": null,
-        "postOperations": null,
-        "fieldType": "string",
-        "reportOptions": null,
-        "hidden": null,
-        "drills": null
-      },
-      {
-        "name": "o_clerk",
-        "type": "column",
-        "value": {
-          "column": "O_CLERK"
-        },
-        "description": "",
-        "label": null,
-        "category": null,
-        "primary": null,
-        "pivot": null,
-        "suggestions": null,
-        "postOperations": null,
-        "fieldType": "string",
-        "reportOptions": null,
-        "hidden": null,
-        "drills": null
-      },
-      {
-        "name": "o_shippriority",
-        "type": "column",
-        "value": {
-          "column": "O_SHIPPRIORITY"
-        },
-        "description": "",
-        "label": null,
-        "category": null,
-        "primary": null,
-        "pivot": null,
-        "suggestions": null,
-        "postOperations": null,
-        "fieldType": "double",
-        "reportOptions": null,
-        "hidden": null,
-        "drills": null
-      },
-      {
-        "name": "o_comment",
-        "type": "column",
-        "value": {
-          "column": "O_COMMENT"
-        },
-        "description": "",
-        "label": null,
-        "category": null,
-        "primary": null,
-        "pivot": null,
-        "suggestions": null,
-        "postOperations": null,
-        "fieldType": "string",
-        "reportOptions": null,
-        "hidden": null,
-        "drills": null
-      }
-    ],
-    "measures": [
-      {
-        "name": "total_orders",
-        "label": null,
-        "description": null,
-        "category": null,
-        "type": "column",
-        "value": {
-          "aggregation": "count",
-          "column": null
-        },
-        "filters": null,
-        "reportOptions": {
-          "looker": {
-            "type": "duration",
-            "sql_end": 2,
-            "sql_start": 1
-          },
-          "datastudio": {
-            "semantic_type": "country"
-          }
-        },
-        "fieldType": "double",
-        "hidden": null,
-        "drills": null
-      },
-      {
-        "name": "total_users",
-        "label": null,
-        "description": null,
-        "category": null,
-        "type": "dimension",
-        "value": {
-          "aggregation": "approximateUnique",
-          "dimension": "o_custkey"
-        },
-        "filters": null,
-        "reportOptions": null,
-        "fieldType": "double",
-        "hidden": null,
-        "drills": null
-      },
-      {
-        "name": "o_orderkey",
-        "label": null,
-        "description": "",
-        "category": null,
-        "type": "column",
-        "value": {
-          "aggregation": "sum",
-          "column": "O_ORDERKEY"
-        },
-        "filters": null,
-        "reportOptions": null,
-        "fieldType": "double",
-        "hidden": null,
-        "drills": null
-      },
-      {
-        "name": "o_custkey",
-        "label": null,
-        "description": "",
-        "category": null,
-        "type": "column",
-        "value": {
-          "aggregation": "sum",
-          "column": "O_CUSTKEY"
-        },
-        "filters": null,
-        "reportOptions": null,
-        "fieldType": "double",
-        "hidden": null,
-        "drills": null
-      },
-      {
-        "name": "o_totalprice",
-        "label": null,
-        "description": "",
-        "category": null,
-        "type": "column",
-        "value": {
-          "aggregation": "sum",
-          "column": "O_TOTALPRICE"
-        },
-        "filters": null,
-        "reportOptions": null,
-        "fieldType": "double",
-        "hidden": null,
-        "drills": null
-      },
-      {
-        "name": "o_shippriority",
-        "label": null,
-        "description": "",
-        "category": null,
-        "type": "column",
-        "value": {
-          "aggregation": "sum",
-          "column": "O_SHIPPRIORITY"
-        },
-        "filters": null,
-        "reportOptions": null,
-        "fieldType": "double",
-        "hidden": null,
-        "drills": null
-      }
-    ],
-    "materializes": [
-      {
-        "name": "totals_by_date",
-        "reportType": "segmentation",
-        "value": {
-          "measures": [
-            "total_orders",
-            "total_users"
-          ],
-          "dimensions": [
-            "o_orderdate",
-            "o_orderstatus",
-            "o_orderpriority"
-          ],
-          "filters": null
-        }
-      }
-    ],
-    "alwaysFilters": null,
-    "id": 86460,
-    "recipeId": 856,
-    "recipePath": "models/orders.yml"
-  },
-  {
     "name": "source_snowflake_tpch_sample_tpch_customer",
     "hidden": false,
     "target": {
@@ -544,8 +197,379 @@
     ],
     "materializes": [],
     "alwaysFilters": null,
-    "id": 86461,
+    "id": 89901,
     "recipeId": 856,
     "recipePath": "models/customer.yml"
+  },
+  {
+    "name": "source_snowflake_tpch_sample_tpch_orders",
+    "hidden": false,
+    "target": {
+      "type": "table",
+      "value": {
+        "database": "SNOWFLAKE_SAMPLE_DATA",
+        "schema": "TPCH_SF1",
+        "table": "ORDERS"
+      }
+    },
+    "label": "Orders",
+    "description": "",
+    "category": null,
+    "mappings": {
+      "userId": "o_custkey",
+      "eventTimestamp": "o_orderdate"
+    },
+    "relations": [
+      {
+        "name": "customer",
+        "label": "customer",
+        "description": null,
+        "relationType": "oneToOne",
+        "joinType": "leftJoin",
+        "modelName": "source_snowflake_tpch_sample_tpch_customer",
+        "type": "column",
+        "value": {
+          "sourceColumn": "O_CUSTKEY",
+          "targetColumn": "c_custkey"
+        },
+        "hidden": null
+      }
+    ],
+    "dimensions": [
+      {
+        "name": "o_orderkey",
+        "type": "column",
+        "value": {
+          "column": "O_ORDERKEY"
+        },
+        "description": "",
+        "label": null,
+        "category": null,
+        "primary": null,
+        "pivot": null,
+        "suggestions": null,
+        "postOperations": null,
+        "fieldType": "double",
+        "reportOptions": null,
+        "hidden": null,
+        "drills": null
+      },
+      {
+        "name": "o_custkey",
+        "type": "column",
+        "value": {
+          "column": "O_CUSTKEY"
+        },
+        "description": "",
+        "label": null,
+        "category": null,
+        "primary": null,
+        "pivot": null,
+        "suggestions": null,
+        "postOperations": null,
+        "fieldType": "double",
+        "reportOptions": null,
+        "hidden": null,
+        "drills": null
+      },
+      {
+        "name": "o_orderstatus",
+        "type": "column",
+        "value": {
+          "column": "O_ORDERSTATUS"
+        },
+        "description": "",
+        "label": null,
+        "category": null,
+        "primary": null,
+        "pivot": null,
+        "suggestions": null,
+        "postOperations": null,
+        "fieldType": "string",
+        "reportOptions": null,
+        "hidden": null,
+        "drills": null
+      },
+      {
+        "name": "o_totalprice",
+        "type": "column",
+        "value": {
+          "column": "O_TOTALPRICE"
+        },
+        "description": "",
+        "label": null,
+        "category": null,
+        "primary": null,
+        "pivot": null,
+        "suggestions": null,
+        "postOperations": null,
+        "fieldType": "double",
+        "reportOptions": {
+          "looker": {
+            "type": "duration",
+            "sql_end": 2,
+            "sql_start": 1
+          },
+          "datastudio": {
+            "semantic_type": "country"
+          }
+        },
+        "hidden": null,
+        "drills": null
+      },
+      {
+        "name": "o_orderdate",
+        "type": "column",
+        "value": {
+          "column": "O_ORDERDATE"
+        },
+        "description": "",
+        "label": null,
+        "category": null,
+        "primary": null,
+        "pivot": null,
+        "suggestions": null,
+        "postOperations": [
+          "day",
+          "week",
+          "year"
+        ],
+        "fieldType": "date",
+        "reportOptions": null,
+        "hidden": null,
+        "drills": null
+      },
+      {
+        "name": "o_orderpriority",
+        "type": "column",
+        "value": {
+          "column": "O_ORDERPRIORITY"
+        },
+        "description": "",
+        "label": null,
+        "category": null,
+        "primary": null,
+        "pivot": null,
+        "suggestions": null,
+        "postOperations": null,
+        "fieldType": "string",
+        "reportOptions": null,
+        "hidden": null,
+        "drills": null
+      },
+      {
+        "name": "o_clerk",
+        "type": "column",
+        "value": {
+          "column": "O_CLERK"
+        },
+        "description": "",
+        "label": null,
+        "category": null,
+        "primary": null,
+        "pivot": null,
+        "suggestions": null,
+        "postOperations": null,
+        "fieldType": "string",
+        "reportOptions": null,
+        "hidden": null,
+        "drills": null
+      },
+      {
+        "name": "o_shippriority",
+        "type": "column",
+        "value": {
+          "column": "O_SHIPPRIORITY"
+        },
+        "description": "",
+        "label": null,
+        "category": null,
+        "primary": null,
+        "pivot": null,
+        "suggestions": null,
+        "postOperations": null,
+        "fieldType": "double",
+        "reportOptions": null,
+        "hidden": null,
+        "drills": null
+      },
+      {
+        "name": "o_comment",
+        "type": "column",
+        "value": {
+          "column": "O_COMMENT"
+        },
+        "description": "",
+        "label": null,
+        "category": null,
+        "primary": null,
+        "pivot": null,
+        "suggestions": null,
+        "postOperations": null,
+        "fieldType": "string",
+        "reportOptions": null,
+        "hidden": null,
+        "drills": null
+      }
+    ],
+    "measures": [
+      {
+        "name": "total_orders",
+        "label": null,
+        "description": null,
+        "category": null,
+        "type": "column",
+        "value": {
+          "aggregation": "count",
+          "column": null
+        },
+        "filters": null,
+        "reportOptions": null,
+        "fieldType": "double",
+        "hidden": null,
+        "drills": null
+      },
+      {
+        "name": "filtered_measure",
+        "label": null,
+        "description": null,
+        "category": null,
+        "type": "column",
+        "value": {
+          "aggregation": "count",
+          "column": null
+        },
+        "filters": [
+          {
+            "type": "metricFilter",
+            "value": {
+              "metricType": "dimension",
+              "metricValue": {
+                "name": "o_orderkey",
+                "modelName": "source_snowflake_tpch_sample_tpch_orders",
+                "relationName": null,
+                "postOperation": null,
+                "pivot": null
+              },
+              "filters": [
+                {
+                  "metricType": null,
+                  "metricValue": null,
+                  "valueType": "double",
+                  "operator": "equals",
+                  "value": 10
+                }
+              ]
+            }
+          }
+        ],
+        "reportOptions": null,
+        "fieldType": "double",
+        "hidden": null,
+        "drills": null
+      },
+      {
+        "name": "total_users",
+        "label": null,
+        "description": null,
+        "category": null,
+        "type": "dimension",
+        "value": {
+          "aggregation": "approximateUnique",
+          "dimension": "o_custkey"
+        },
+        "filters": null,
+        "reportOptions": null,
+        "fieldType": "double",
+        "hidden": null,
+        "drills": null
+      },
+      {
+        "name": "o_orderkey",
+        "label": null,
+        "description": "",
+        "category": null,
+        "type": "column",
+        "value": {
+          "aggregation": "sum",
+          "column": "O_ORDERKEY"
+        },
+        "filters": null,
+        "reportOptions": null,
+        "fieldType": "double",
+        "hidden": null,
+        "drills": null
+      },
+      {
+        "name": "o_custkey",
+        "label": null,
+        "description": "",
+        "category": null,
+        "type": "column",
+        "value": {
+          "aggregation": "sum",
+          "column": "O_CUSTKEY"
+        },
+        "filters": null,
+        "reportOptions": null,
+        "fieldType": "double",
+        "hidden": null,
+        "drills": null
+      },
+      {
+        "name": "o_totalprice",
+        "label": null,
+        "description": "",
+        "category": null,
+        "type": "column",
+        "value": {
+          "aggregation": "sum",
+          "column": "O_TOTALPRICE"
+        },
+        "filters": null,
+        "reportOptions": null,
+        "fieldType": "double",
+        "hidden": null,
+        "drills": null
+      },
+      {
+        "name": "o_shippriority",
+        "label": null,
+        "description": "",
+        "category": null,
+        "type": "column",
+        "value": {
+          "aggregation": "sum",
+          "column": "O_SHIPPRIORITY"
+        },
+        "filters": null,
+        "reportOptions": null,
+        "fieldType": "double",
+        "hidden": null,
+        "drills": null
+      }
+    ],
+    "materializes": [
+      {
+        "name": "totals_by_date",
+        "reportType": "segmentation",
+        "value": {
+          "measures": [
+            "total_orders",
+            "total_users"
+          ],
+          "dimensions": [
+            "o_orderdate",
+            "o_orderstatus",
+            "o_orderpriority"
+          ],
+          "filters": null
+        }
+      }
+    ],
+    "alwaysFilters": null,
+    "id": 89900,
+    "recipeId": 856,
+    "recipePath": "models/orders.yml"
   }
 ]
