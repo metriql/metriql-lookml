@@ -5,6 +5,7 @@ import os
 import shutil
 import sys
 import tempfile
+import zipfile
 from typing import List
 
 __version__ = "0.1"
@@ -67,9 +68,8 @@ def main(args: list = None):
         generate_lookml_models(out_directory, datasets, args.connection)
 
         if args.out is None:
-            zip_file = shutil.make_archive(os.path.join(temp_dir.name, args.connection), 'zip', out_directory)
-            with open(zip_file, 'w') as fin:
-                sys.stdout = fin
+            zip_file = shutil.make_archive(out_directory, 'zip', root_dir=out_directory)
+            sys.stdout.buffer.write(open(zip_file, 'rb').read())
     finally:
         if temp_dir is not None:
             temp_dir.cleanup()
