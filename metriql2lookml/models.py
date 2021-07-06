@@ -4,6 +4,7 @@ from typing import Any, List, Optional
 
 from pydantic import BaseModel, Field
 
+
 # Looker file types
 class LookViewFile(BaseModel):
     filename: str

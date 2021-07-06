@@ -1,6 +1,6 @@
 import lkml
 from typing import List
-from models import MetriqlModel, LookViewFile, LookModelFile, Measure, Dimension
+from .models import MetriqlModel, LookViewFile, LookModelFile, Measure, Dimension
 
 LOOKER_DTYPE_MAP = {
     "integer": "number",
@@ -19,7 +19,6 @@ looker_scalar_types = ["number", "yesno", "string"]
 
 
 def lookml_view_from_metriql_model(model: MetriqlModel, models: List[MetriqlModel]):
-
     lookml = {
         "view": {
             "name": model.name,
@@ -34,8 +33,7 @@ def lookml_view_from_metriql_model(model: MetriqlModel, models: List[MetriqlMode
     return LookViewFile(filename=filename, contents=contents)
 
 
-def lookml_model_from_metriql_models(models: List[MetriqlModel], project_name: str):
-
+def lookml_model_from_metriql_models(models: List[MetriqlModel], connection: str):
     explore = []
     for model in models:
         explore_model_data = {"name": model.name}
@@ -44,18 +42,17 @@ def lookml_model_from_metriql_models(models: List[MetriqlModel], project_name: s
         explore.append(explore_model_data)
 
     lookml = {
-        "connection": project_name,
+        "connection": connection,
         "include": "/views/*",
         "explore": explore,
     }
 
     contents = lkml.dump(lookml)
-    filename = f"{project_name}.model"
+    filename = f"{connection}.model"
     return LookModelFile(filename=filename, contents=contents)
 
 
 def lookml_measures_from_model(model: MetriqlModel, models: List[MetriqlModel]):
-
     lookml_measures = [lookml_measure(measure, None) for measure in model.measures]
 
     for relation in model.relations:
@@ -106,7 +103,6 @@ def lookml_measure(measure: Measure, prefix: str):
 
 
 def lookml_dimensions_from_model(model: MetriqlModel, models: List[MetriqlModel]):
-
     lookml_dimensions = [
         dimension_data
         for dimension in model.dimensions
@@ -176,7 +172,7 @@ def lookml_dimension_group(dimension: Dimension, prefix: str):
         return [
             {
                 "name": ("{}.".format(prefix) if prefix else "")
-                + f"{dimension.name}__{postOperation}",
+                        + f"{dimension.name}__{postOperation}",
                 "sql": f"${{TABLE}}.{dimension.value.column}::{postOperation}",
                 "label": postOperation,
                 "group_label": dimension.value.column,
