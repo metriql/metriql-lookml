@@ -14,12 +14,11 @@ pip install metriql-lookml
 The library expects `stdin` for the metriql metadata and outputs a ZIP file to `stdout`. Here is an example:
 
 ```
-curl http://metriql-server.com/api/v0/metadata | metriql-lookml --connection myproject create-model-zip > metriql.zip
+curl http://metriql-server.com/api/v0/metadata | metriql-lookml --connection myproject > metriql.zip
 ```
 
 You can use `--file` argument instead of reading the metadata from `stdin` as an alternative. 
 The command outputs a zip file to `stdout` by default, if you pass `--out myfile.zip` argument, it will write to the specified file instead.
-The only command is `create-model-zip` for now.
 
 ### How does it work?
 
