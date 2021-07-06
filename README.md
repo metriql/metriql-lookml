@@ -11,7 +11,7 @@ The library is available in PyPI so you can install it via pip as follows:
 pip install metriql-lookml
 ```
 
-The library expects `stdin` for the metriql metadata and outputs a TDS file to `stdout`. Here is an example:
+The library expects `stdin` for the metriql metadata and outputs a ZIP file to `stdout`. Here is an example:
 
 ```
 curl http://metriql-server.com/api/v0/metadata | metriql-lookml --connection myproject create-model-zip > metriql.zip
