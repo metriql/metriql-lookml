@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 lkml = "*"
+pydantic = "*"
 
 [dev-packages]
 jupyter = "*"
@@ -15,4 +16,4 @@ black = "*"
 python_version = "3.9"
 
 [scripts]
-metriql2lookml = "python src/cli.py"
+metriql2lookml = "python bin/metriql-lookml --file example/sample.json"
