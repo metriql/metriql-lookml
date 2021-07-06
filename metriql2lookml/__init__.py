@@ -14,7 +14,7 @@ from .generator import lookml_view_from_metriql_model, lookml_model_from_metriql
 from .models import MetriqlModel
 
 
-def load_metriql_models(file):
+def load_metriql_models(file: str):
     if file is not None:
         source = open(file).read()
     else:
@@ -23,7 +23,7 @@ def load_metriql_models(file):
     return [MetriqlModel(**raw_model) for raw_model in datasets]
 
 
-def generate_lookml_views(out_directory, models: List[MetriqlModel]):
+def generate_lookml_views(out_directory: str, models: List[MetriqlModel]):
     lookml_views = [
         lookml_view_from_metriql_model(model, models) for model in models
     ]
@@ -37,7 +37,7 @@ def generate_lookml_views(out_directory, models: List[MetriqlModel]):
             f.write(view.contents)
 
 
-def generate_lookml_models(out_directory, models: List[MetriqlModel], connection: str):
+def generate_lookml_models(out_directory: str, models: List[MetriqlModel], connection: str):
     lookml_models_file = lookml_model_from_metriql_models(
         models, connection
     )
