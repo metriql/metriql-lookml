@@ -33,7 +33,7 @@ def lookml_view_from_metriql_model(model: MetriqlModel, models: List[MetriqlMode
     return LookViewFile(filename=filename, contents=contents)
 
 
-def lookml_model_from_metriql_models(models: List[MetriqlModel], project_name: str):
+def lookml_model_from_metriql_models(models: List[MetriqlModel], connection: str):
     explore = []
     for model in models:
         explore_model_data = {"name": model.name}
@@ -42,13 +42,13 @@ def lookml_model_from_metriql_models(models: List[MetriqlModel], project_name: s
         explore.append(explore_model_data)
 
     lookml = {
-        "connection": project_name,
+        "connection": connection,
         "include": "/views/*",
         "explore": explore,
     }
 
     contents = lkml.dump(lookml)
-    filename = f"{project_name}.model"
+    filename = f"{connection}.model"
     return LookModelFile(filename=filename, contents=contents)
 
 

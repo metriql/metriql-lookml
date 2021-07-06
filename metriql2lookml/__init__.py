@@ -7,6 +7,8 @@ import sys
 import tempfile
 from typing import List
 
+__version__ = "0.1"
+
 from .generator import lookml_view_from_metriql_model, lookml_model_from_metriql_models
 from .models import MetriqlModel
 
@@ -34,9 +36,9 @@ def generate_lookml_views(out_directory, models: List[MetriqlModel]):
             f.write(view.contents)
 
 
-def generate_lookml_models(out_directory, models: List[MetriqlModel], project_name: str):
+def generate_lookml_models(out_directory, models: List[MetriqlModel], connection: str):
     lookml_models_file = lookml_model_from_metriql_models(
-        models, project_name
+        models, connection
     )
 
     with open(os.path.join(out_directory, lookml_models_file.filename), "w") as f:
@@ -45,10 +47,7 @@ def generate_lookml_models(out_directory, models: List[MetriqlModel], project_na
 
 def main(args: list = None):
     argparser = argparse.ArgumentParser()
-    argparser.add_argument(
-        "--project_name", help="Model name", type=str, default="metriql"
-    )
-
+    argparser.add_argument("--connection", help="Connection name in your Looker setup", type=str, default="metriql")
     argparser.add_argument("--file", help="source of the metadata file. if not set, the source is stdin")
     argparser.add_argument("--out", help="Output directory")
 
@@ -65,16 +64,12 @@ def main(args: list = None):
     try:
         datasets = load_metriql_models(args.file)
         generate_lookml_views(out_directory, datasets)
-        generate_lookml_models(out_directory, datasets, args.project_name)
+        generate_lookml_models(out_directory, datasets, args.connection)
 
         if args.out is None:
-            zip_file = shutil.make_archive(os.path.join(temp_dir.name, args.project_name), 'zip', out_directory)
-            with open(zip_file, 'r') as fin:
-                sys.stdout.reconfigure(encoding='utf-8')
-                shutil.copyfileobj(fin, sys.stdout)
+            zip_file = shutil.make_archive(os.path.join(temp_dir.name, args.connection), 'zip', out_directory)
+            with open(zip_file, 'w') as fin:
+                sys.stdout = fin
     finally:
         if temp_dir is not None:
             temp_dir.cleanup()
-
-
-
