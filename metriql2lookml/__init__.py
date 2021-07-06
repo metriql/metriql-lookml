@@ -5,7 +5,6 @@ import os
 import shutil
 import sys
 import tempfile
-import zipfile
 from typing import List
 
 __version__ = "0.1"
@@ -14,12 +13,7 @@ from .generator import lookml_view_from_metriql_model, lookml_model_from_metriql
 from .models import MetriqlModel
 
 
-def load_metriql_models(file: str):
-    if file is not None:
-        source = open(file).read()
-    else:
-        source = sys.stdin.readline()
-    datasets = json.loads(source)
+def load_metriql_models(datasets: List[MetriqlModel]):
     return [MetriqlModel(**raw_model) for raw_model in datasets]
 
 
@@ -54,6 +48,12 @@ def main(args: list = None):
 
     args = argparser.parse_args(args=args)
 
+    if args.file is not None:
+        source = open(args.file).read()
+    else:
+        source = sys.stdin.readline()
+    raw_datasets = json.loads(source)
+
     temp_dir = None
     if args.out is None:
         temp_dir = tempfile.TemporaryDirectory(suffix="metriql2looker")
@@ -63,7 +63,7 @@ def main(args: list = None):
         out_directory = args.out
 
     try:
-        datasets = load_metriql_models(args.file)
+        datasets = load_metriql_models(raw_datasets)
         generate_lookml_views(out_directory, datasets)
         generate_lookml_models(out_directory, datasets, args.connection)
 
